@@ -1,0 +1,185 @@
+
+% Required Packages
+\RequirePackage{tikz}
+\RequirePackage{import}
+\RequirePackage{xcolor}
+\RequirePackage{xhfill}
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{xifthen}
+\RequirePackage{listings}
+\RequirePackage{pdfpages}
+\RequirePackage{graphicx}
+\RequirePackage{textgreek}
+\RequirePackage{transparent}
+\ProcessOptions\relax
+
+% Config
+\renewcommand{\arraystretch}{1.5}
+
+% Lengths
+\newlength{\minuslength}
+\setlength{\parindent}{0pt}
+\settowidth{\minuslength}{$-$}
+
+% TikZ
+\newcommand{\tikzlabel}[3]{\node[label={[xshift=#1cm, yshift=#2cm] $#3$}] {};}
+
+\makeatletter
+\newcommand{\oset}[3][0ex]{%
+    \mathrel{\mathop{#3}\limits^{
+    \vbox to#1{\kern-1.5\ex@
+    \hbox{$\scriptstyle#2$}\vss}}}}
+\makeatother
+
+\makeatletter
+\newcommand{\uset}[3][0ex]{%
+    \mathrel{\mathop{#3}\limits^{
+    \vbox to#1{\kern+10\ex@
+    \hbox{$\scriptstyle#2$}\vss}}}}
+\makeatother
+
+% New symbol
+\DeclareMathSymbol{\shortminus}{\mathbin}{AMSa}{"39}
+
+\def\app#1#2{%
+  \mathrel{%
+    \setbox0=\hbox{$#1\sim$}%
+    \setbox2=\hbox{%
+      \rlap{\hbox{$#1\propto$}}%
+      \lower1.1\ht0\box0%
+    }%
+    \raise0.25\ht2\box2%
+  }%
+}
+\def\approxprop{\mathpalette\app\relax}
+
+% New Commands
+\newcommand{\pp}[2]{\left(\frac{\partial #1}{\partial #2}\right)}
+\newcommand{\ppp}[2]{\left(\frac{\partial^2 #1}{\partial #2^2}\right)}
+\newcommand{\brac}[2]{\left(\frac{#1}{#2}\right)}
+\newcommand{\ang}{\text{\normalfont\AA}}
+\newcommand{\nroot}[2]{\sqrt[#1]{#2}} 
+\newcommand{\linesep}[1]{\addtolength{\jot}{#1}} 
+\newcommand{\vv}[1]{\oset{\to}{#1}}
+\newcommand{\mat}[1]{\uset{\sim}{#1}}
+\newcommand{\mn}{\hspace{\minuslength}}
+\newcommand{\ith}{\ensuremath{i^{\text{th}}}}
+\newcommand{\jth}{\ensuremath{j^{\text{th}}}}
+\newcommand{\inv}[1]{#1^{\shortminus 1}}
+\newcommand{\adj}[1]{\text{adj} \left( \mat{#1} \right)}
+\newcommand{\dbar}{\ensuremath{d\hspace*{-0.08em}\bar{}\hspace*{0.1em}}}
+\newcommand{\textline}[1]{\noindent \xrfill[0.7ex]{0.5pt}\ #1\ \xrfill[0.7ex]{0.5pt}}
+\newcommand{\incfig}[3]{{\fontsize{#3}{1.25#3} \selectfont \def\svgwidth{#2\columnwidth} \import{./figures/}{#1.pdf_tex}}}
+
+% Renew Commands
+%\renewcommand{\ds}{\hspace{2pt} d}
+\renewcommand{\det}[1]{\left| #1 \right|}
+\renewcommand{\lim}[2]{\ensuremath{\underset{#1 \to #2}{\text{lim}}}}
+
+% Renew with \ensuremath
+\let\talpha\alpha
+\let\tbeta\beta
+\let\tgamma\gamma
+\let\tdelta\delta
+\let\tepsilon\varepsilon
+\let\ttheta\theta
+\let\tmu\mu
+\let\tpi\pi
+\let\trho\rho
+\let\tsigma\sigma
+\let\tomega\omega
+
+\renewcommand{\alpha}{\ensuremath{\talpha}}
+\renewcommand{\beta}{\ensuremath{\tbeta}}
+\renewcommand{\gamma}{\ensuremath{\tgamma}}
+\renewcommand{\delta}{\ensuremath{\tdelta}}
+\renewcommand{\epsilon}{\ensuremath{\tepsilon}}
+\renewcommand{\theta}{\ensuremath{\ttheta}}
+\renewcommand{\mu}{\ensuremath{\tmu}}
+\renewcommand{\nu}{\text{\textnu}}
+\renewcommand{\pi}{\ensuremath{\tpi}}
+\renewcommand{\rho}{\ensuremath{\trho}}
+\renewcommand{\sigma}{\ensuremath{\tsigma}}
+\renewcommand{\omega}{\ensuremath{\tomega}}
+\renewcommand{\lambda}{\text{\textlambda}}
+
+% Code Listings
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+
+\lstdefinestyle{mystyle}{
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+% Counters
+\newcounter{example}
+\newcounter{proof}
+
+% New Environments
+\newenvironment{notebene} % Note Bene Environment
+    {\begin{center} \small N.B. ---}
+    {\end{center}}
+
+\newenvironment{example}[1]{% Example Environment
+  \refstepcounter{example}%
+  \bigskip
+  \noindent%
+  \begin{tikzpicture}
+    \draw (-0.49\columnwidth,-0.2)--(-0.49\columnwidth,0)--(0.49\columnwidth,0)--(0.49\columnwidth,-0.2);
+    \node[fill=white,font=\small\bfseries] at (0,-1pt) {Example \thesection.\theexample{} --- #1};
+  \end{tikzpicture}%
+  \par%
+}{%
+  \par%
+  \noindent%
+  \begin{tikzpicture}
+    \draw (-0.49\columnwidth,0.2) -- (-0.49\columnwidth,0) -- (0.49\columnwidth,0) -- (0.49\columnwidth,0.2);
+  \end{tikzpicture}%
+  \par%
+}
+
+\newenvironment{proof}[1]{% Proof Environment
+  \refstepcounter{proof}%
+  \bigskip
+  \noindent%
+  \begin{tikzpicture}
+    \draw (-0.49\columnwidth,-0.2)--(-0.49\columnwidth,0)--(0.49\columnwidth,0)--(0.49\columnwidth,-0.2);
+    \node[fill=white,font=\small\bfseries] at (0,-1pt) {Proof \thesection.\theproof{} --- #1};
+  \end{tikzpicture}%
+  \par%
+}{%
+  \par%
+  \noindent%
+  \begin{tikzpicture}
+    \draw (-0.49\columnwidth,0.2) -- (-0.49\columnwidth,0) -- (0.49\columnwidth,0) -- (0.49\columnwidth,0.2);
+  \end{tikzpicture}%
+  \par%
+}
+
+\newenvironment{python}[2] % Python Environment
+    {\bigskip\begin{tikzpicture}
+        \draw (-0.5\columnwidth,-0.2)--(-0.5\columnwidth,0)--(0.5\columnwidth,0)--(0.5\columnwidth,-0.2);
+    \end{tikzpicture}
+    \begin{lstlisting}[language=Python]}
+    %
+    {\end{lstlisting}
+    \begin{tikzpicture}
+        \draw (-0.5\columnwidth,0.2) -- (-0.5\columnwidth,0) -- (0.5\columnwidth,0) -- (0.5\columnwidth,0.2);
+    \end{tikzpicture}}
+
+\endinput
